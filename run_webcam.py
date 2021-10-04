@@ -56,7 +56,7 @@ def lateral_elevation_phase_1(hand_to_hand_distance, shoulder_angle_l, shoulder_
         angle1 and angle5 are angle between neck,shoulder and wrist
         head_hand_dst_r and head_hand_dst_l are distance between head to hands.
     '''
-    if hand_to_hand_distance in range(80, 300) and shoulder_angle_l in range(100, 140) and shoulder_angle_r in range(100, 140) and head_hand_dst_r in range(100, 160) and head_hand_dst_l in range(100, 160):
+    if hand_to_hand_distance in range(80, 300) and shoulder_angle_l in range(100, 150) and shoulder_angle_r in range(100, 150) and head_hand_dst_r in range(100, 160) and head_hand_dst_l in range(100, 160):
         return True
     return False
 def lateral_elevation_phase_2(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l):
@@ -102,7 +102,7 @@ if __name__ == '__main__':
                         help='for debug purpose, if enabled, speed for inference is dropped.')
     args = parser.parse_args()
 
-    print("modo 0: Mapeamento apenas \nmodo 1: Elevação Lateral \nmode 2: Agachamento")
+    print("modo 0: Mapeamento apenas \nmodo 1: Elevação Lateral \nmode 2: prancha")
     mode = int(input("Enter a mode : "))
 
     logger.debug('initialization %s : %s' % (args.model, get_graph_path(args.model)))
@@ -123,7 +123,9 @@ if __name__ == '__main__':
     orange_color = (0,140,255)
     green_color = (0,255,0)
     red_color = (0,0,255)
+    white_color = (255 ,255,255)
     action = 'Desconhecido'
+    reps = 0
     while True:
         ret_val, image = cam.read()
         i =1
@@ -152,6 +154,8 @@ if __name__ == '__main__':
                     draw_str(image, (20, 50), "Assuma a posicao inicial de elevacao", orange_color, 2)
                 if (mode == 1) and lateral_elevation_phase_1(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and (action == 'Desconhecido' or action == 'fase4'):
                     # incremente o contador aqui
+                    if action == "fase4":
+                        reps+=1
                     action = "fase1"
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
@@ -208,6 +212,8 @@ if __name__ == '__main__':
                         draw_str(image, (20, 50), "Retorne para a posicao inicial", green_color, 2)
             if len(pose) == 0 :
                 action = 'Desconhecido'
+                reps = 0
+            draw_str(image, (10, 450), "repeticoes = "+ str(reps), white_color, 2)
             logger.debug("*** Elevacao lateral *** - "+action)
         elif mode == 2:
             if len(pose) > 0:
