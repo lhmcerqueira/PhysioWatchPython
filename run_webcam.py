@@ -150,13 +150,12 @@ if __name__ == '__main__':
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Assuma a posicao inicial de elevacao", orange_color, 2)
-                    logger.debug("*** Elevacao lateral ***")
-                if (mode == 1) and lateral_elevation_phase_1(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'Desconhecido':
+                if (mode == 1) and lateral_elevation_phase_1(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and (action == 'Desconhecido' or action == 'fase4'):
+                    # incremente o contador aqui
                     action = "fase1"
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Eleve os bracos mantendo o angulo", green_color, 2)
-                    logger.debug("*** Elevacao lateral ***")
                 if (mode == 1) and action == "fase1":
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
                     if not (hand_to_hand_distance in range(70, 300)):
@@ -168,13 +167,11 @@ if __name__ == '__main__':
                         draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
                     else:
                         draw_str(image, (20, 50), "Eleve os bracos mantendo o angulo", green_color, 2)
-                        logger.debug("*** Elevacao lateral ***")
                 if (mode == 1) and lateral_elevation_phase_2(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase1':
                     action = "fase2"
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Eleve os braços até ficarem paralelos ao solo", green_color, 2)
-                    logger.debug("*** Elevacao lateral ***")
                 if (mode == 1) and action == "fase2":
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
                     if not (elbow_angle_l in range(160, 190)):
@@ -183,13 +180,11 @@ if __name__ == '__main__':
                         draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
                     else:
                         draw_str(image, (20, 50), "Eleve os bracos ate ficarem paralelos ao solo", green_color, 2)
-                        logger.debug("*** Elevacao lateral ***")
                 if (mode == 1) and lateral_elevation_phase_3(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase2':
                     action = "fase3"
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Desca os bracos mantendo o angulo correto", green_color, 2)
-                    logger.debug("*** Elevacao lateral ***")
                 if (mode == 1) and action == "fase3":
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
                     if not (elbow_angle_l in range(160, 190)):
@@ -198,11 +193,22 @@ if __name__ == '__main__':
                         draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
                     else:
                         draw_str(image, (20, 50), "Desca os bracos mantendo o angulo correto", green_color, 2)
-                        logger.debug("*** Elevacao lateral ***")
-
+                if (mode == 1) and lateral_elevation_phase_2(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase3':
+                    action = "fase4"
+                    #if prev_action == 'Unknown' or prev_action == "Unknown_First":
+                    #    exercise_duration = time.time()
+                    draw_str(image, (20, 50), "Retorne para a posicao inicial", green_color, 2)
+                if (mode == 1) and action == "fase4":
+                    # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
+                    if not (elbow_angle_l in range(160, 190)):
+                        draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                    elif not (elbow_angle_r in range(160, 190)):
+                        draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                    else:
+                        draw_str(image, (20, 50), "Retorne para a posicao inicial", green_color, 2)
             if len(pose) == 0 :
                 action = 'Desconhecido'
-
+            logger.debug("*** Elevacao lateral *** - "+action)
         elif mode == 2:
             if len(pose) > 0:
                 # distance calculations
