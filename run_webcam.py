@@ -129,6 +129,8 @@ if __name__ == '__main__':
     white_color = (255 ,255,255)
     action = 'Desconhecido'
     reps = 0
+    right_error = False
+    left_error = False
     while True:
         ret_val, image = cam.read()
         i =1
@@ -150,7 +152,9 @@ if __name__ == '__main__':
                 elbow_angle_r =  angle_calc(find_point(pose, 2), find_point(pose, 3), find_point(pose, 4)) # angulo cptovelo direito
 
                 right_hand_point = find_point(pose, 7)   # ponto da mão direita atualmente
-                left_hand_point = find_point(pose, 4)
+                left_hand_point = find_point(pose, 4)    # ponto da mão esquerda atualmente
+                right_hand_prev.append(right_hand_point[1])
+                left_hand_prev.append(left_hand_point[1])
                 # logger.debug("*** Entrou aqui ***")
 
                 if (mode == 1) and action == 'Desconhecido':
@@ -166,10 +170,15 @@ if __name__ == '__main__':
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Eleve os bracos mantendo o angulo", green_color, 2)
                 if (mode == 1) and action == "fase1":
+                    #test = right_hand_point[1] - right_hand_prev[-2]
+                    #draw_str(image, (20, 100),  str(test), green_color, 4)
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
-                    if not (hand_to_hand_distance in range(70, 300)):
+                    if (right_hand_point[1] - right_hand_prev[-2]) > 1:  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (20, 50), "Elevar mao direita", red_color, 2)
+                    elif (left_hand_point[1] - left_hand_prev[-2]) > 1:  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (20, 50), "Elevar mao esquerda", red_color, 2)
+                    elif not (hand_to_hand_distance in range(70, 300)):
                         draw_str(image, (20, 50), "Continue elevando os bracos", red_color, 2)
-                        # ver na deteccao de imagem sobre comparar y para subir
                     elif not (elbow_angle_l in range(130, 170)):
                         draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
                     elif not (elbow_angle_r in range(130, 170)):
@@ -182,8 +191,14 @@ if __name__ == '__main__':
                     #    exercise_duration = time.time()
                     draw_str(image, (20, 50), "Eleve os braços até ficarem \nparalelos ao solo", green_color, 2)
                 if (mode == 1) and action == "fase2":
+                    test = right_hand_point[1] - right_hand_prev[-2]
+                    draw_str(image, (20, 100),  str(test), green_color, 4)
+                    if (right_hand_point[1] - right_hand_prev[-2]) > 1:  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (20, 50), "Elevar mao direita", red_color, 2)
+                    elif (left_hand_point[1] - left_hand_prev[-2]) > 1:  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (20, 50), "Elevar mao esquerda", red_color, 2)
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
-                    if not (elbow_angle_l in range(150, 190)):
+                    elif not (elbow_angle_l in range(150, 190)):
                         draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
                     elif not (elbow_angle_r in range(150, 190)):
                         draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
