@@ -148,89 +148,102 @@ if __name__ == '__main__':
                 # angle calcucations
                 shoulder_angle_l =  angle_calc(find_point(pose, 6), find_point(pose, 5), find_point(pose, 1)) # angulo ombro esquerdo
                 shoulder_angle_r =  angle_calc(find_point(pose, 3), find_point(pose, 2), find_point(pose, 1)) # angulo ombro direito
-                elbow_angle_l =  angle_calc(find_point(pose, 5), find_point(pose, 6), find_point(pose, 7)) # angulo cptovelo esquerdo
-                elbow_angle_r =  angle_calc(find_point(pose, 2), find_point(pose, 3), find_point(pose, 4)) # angulo cptovelo direito
+                elbow_angle_l =  angle_calc(find_point(pose, 5), find_point(pose, 6), find_point(pose, 7)) # angulo cotovelo esquerdo
+                elbow_angle_r =  angle_calc(find_point(pose, 2), find_point(pose, 3), find_point(pose, 4)) # angulo cotovelo direito
+                leg_hip_angle_r =  angle_calc(find_point(pose, 1), find_point(pose, 8), find_point(pose, 9)) # angulo perna e quadril  direito
+                leg_hip_angle_l =  angle_calc(find_point(pose, 1), find_point(pose, 11), find_point(pose, 12)) # angulo perna e quadril  esquerdo
 
                 right_hand_point = find_point(pose, 4)   # ponto da mão direita atualmente
                 left_hand_point = find_point(pose, 7)    # ponto da mão esquerda atualmente
                 right_hand_prev.append(right_hand_point[1])
                 left_hand_prev.append(left_hand_point[1])
-                # logger.debug("*** Entrou aqui ***")
+
                 if (mode == 1) and reps == 2:
                     action = 'fim'
                 if (mode == 1) and action == 'Desconhecido':
-                    #if prev_action == 'Unknown' or prev_action == "Unknown_First":
-                    #    exercise_duration = time.time()
-                    draw_str(image, (20, 50), "Assuma a posicao inicial de elevacao", orange_color, 2)
+                    draw_str(image, (10, 30), "Assuma a posicao inicial de elevacao", orange_color, 2)
                 if (mode == 1) and lateral_elevation_phase_1(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and (action == 'Desconhecido' or action == 'fase4'):
                     # incremente o contador aqui
                     if action == "fase4":
                         reps+=1
                     action = "fase1"
-                    draw_str(image, (20, 50), "Eleve os bracos mantendo o angulo", green_color, 2)
+                    draw_str(image, (10, 30), "Eleve os bracos mantendo o angulo", green_color, 2)
                 if (mode == 1) and action == "fase1":
-                    test = left_hand_point[1] - right_hand_point[1]
-                    draw_str(image, (20, 100),  str(test), red_color, 4)
-                    # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
-                    if ((right_hand_point[1] - right_hand_prev[-2]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Elevar mao direita", red_color, 2)
-                    elif ((left_hand_point[1] - left_hand_prev[-2]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Elevar mao esquerda", red_color, 2)
+                    if ((right_hand_point[1] - right_hand_prev[-2]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Elevar mao direita", red_color, 2)
+                    elif ((left_hand_point[1] - left_hand_prev[-2]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Elevar mao esquerda", red_color, 2)
                     elif not (hand_to_hand_distance in range(70, 300)):
-                        draw_str(image, (20, 50), "Continue elevando os bracos", red_color, 2)
+                        draw_str(image, (10, 30), "Continue elevando os bracos", red_color, 2)
                     elif not (elbow_angle_l in range(130, 170)):
-                        draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo", red_color, 2)
                     elif not (elbow_angle_r in range(130, 170)):
-                        draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo", red_color, 2)
+                    elif (leg_hip_angle_r > 171):
+                        draw_str(image, (10, 30), "Alinhar o quadril para a esquerda", red_color, 2)
+                    elif (leg_hip_angle_l > 171):
+                        draw_str(image, (10, 30), "Alinhar o quadril para a direita", red_color, 2)
                     else:
-                        draw_str(image, (20, 50), "Eleve os bracos mantendo o angulo", green_color, 2)
+                        draw_str(image, (10, 30), "Eleve os bracos mantendo o angulo", green_color, 2)
                 if (mode == 1) and lateral_elevation_phase_2(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase1':
                     action = "fase2"
-                    draw_str(image, (20, 50), "Eleve os braços até ficarem \nparalelos ao solo", green_color, 2)
+                    draw_str(image, (10, 30), "Eleve os bracos ate ficarem", green_color, 2)
+                    draw_str(image, (10, 50), "paralelos ao solo", green_color, 2)
                 if (mode == 1) and action == "fase2":
-                    test = left_hand_point[1] - right_hand_point[1]
-                    draw_str(image, (20, 100),  str(test), red_color, 4)
-                    if ((right_hand_point[1] - right_hand_prev[-2]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Elevar mao direita", red_color, 2)
-                    elif ((left_hand_point[1] - left_hand_prev[-2]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Elevar mao esquerda", red_color, 2)
+                    if ((right_hand_point[1] - right_hand_prev[-2]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Elevar mao direita", red_color, 2)
+                    elif ((left_hand_point[1] - left_hand_prev[-2]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Elevar mao esquerda", red_color, 2)
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
                     elif not (elbow_angle_l in range(150, 190)):
-                        draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo", red_color, 2)
                     elif not (elbow_angle_r in range(150, 190)):
-                        draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo", red_color, 2)
+                    elif (leg_hip_angle_r > 171):
+                        draw_str(image, (10, 30), "Alinhar o quadril para a esquerda", red_color, 2)
+                    elif (leg_hip_angle_l > 171):
+                        draw_str(image, (10, 30), "Alinhar o quadril para a direita", red_color, 2)
                     else:
-                        draw_str(image, (20, 50), "Eleve os bracos ate ficarem paralelos ao solo", green_color, 2)
+                        draw_str(image, (10, 30), "Eleve os bracos ate ficarem", green_color, 2)
+                        draw_str(image, (10, 50), "paralelos ao solo", green_color, 2)
                 if (mode == 1) and lateral_elevation_phase_3(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase2':
                     action = "fase3"
-                    draw_str(image, (20, 50), "Desca os bracos mantendo o angulo correto", green_color, 2)
+                    draw_str(image, (10, 30), "Desca os bracos mantendo o angulo", green_color, 2)
                 if (mode == 1) and action == "fase3":
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
                     if ((right_hand_prev[-2] - right_hand_point[1]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Descer mao direita", red_color, 2)
+                        draw_str(image, (10, 30), "Descer mao direita", red_color, 2)
                     elif ((left_hand_prev[-2] - left_hand_point[1]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Descer mao esquerda", red_color, 2)
+                        draw_str(image, (10, 30), "Descer mao esquerda", red_color, 2)
                     elif not (elbow_angle_l in range(150, 190)):
-                        draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo", red_color, 2)
                     elif not (elbow_angle_r in range(150, 190)):
-                        draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo", red_color, 2)
+                    elif not (elbow_angle_l in range(150, 190)):
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo", red_color, 2)
+                    elif not (elbow_angle_r in range(150, 190)):
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo", red_color, 2)
                     else:
-                        draw_str(image, (20, 50), "Desca os bracos mantendo o angulo correto", green_color, 2)
+                        draw_str(image, (10, 30), "Desca os bracos mantendo o angulo", green_color, 2)
                 if (mode == 1) and lateral_elevation_phase_2(hand_to_hand_distance, shoulder_angle_l, shoulder_angle_r, head_hand_dst_r, head_hand_dst_l) and action == 'fase3':
                     action = "fase4"
-                    draw_str(image, (20, 50), "Retorne para a posicao inicial", green_color, 2)
+                    draw_str(image, (10, 30), "Continue descendo", green_color, 2)
                 if (mode == 1) and action == "fase4":
                     # if m_pose in range(20,300) and angle1 in range(60,140) and angle5 in range(60,140) and head_hand_dst_r in range(100,145) and head_hand_dst_l in range(100,145):
-                    if ((right_hand_prev[-2] - right_hand_point[1]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Descer mao direita", red_color, 2)
-                    elif ((left_hand_prev[-2] - left_hand_point[1]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 6):  # it's distance between frame and comparing it with thresold value
-                        draw_str(image, (20, 50), "Descer mao esquerda", red_color, 2)
+                    if ((right_hand_prev[-2] - right_hand_point[1]) > 1) or ((left_hand_point[1] - right_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Descer mao direita", red_color, 2)
+                    elif ((left_hand_prev[-2] - left_hand_point[1]) > 1) or ((right_hand_point[1] - left_hand_point[1]) > 8):  # it's distance between frame and comparing it with thresold value
+                        draw_str(image, (10, 30), "Descer mao esquerda", red_color, 2)
                     if not (elbow_angle_l in range(160, 190)):
-                        draw_str(image, (20, 50), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
                     elif not (elbow_angle_r in range(160, 190)):
-                        draw_str(image, (20, 50), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo adequado", red_color, 2)
+                    elif not (elbow_angle_l in range(150, 190)):
+                        draw_str(image, (10, 30), "Cotovelo esquerdo fora do angulo adequado", red_color, 2)
+                    elif not (elbow_angle_r in range(150, 190)):
+                        draw_str(image, (10, 30), "Cotovelo direito fora do angulo adequado", red_color, 2)
                     else:
-                        draw_str(image, (20, 50), "Retorne para a posicao inicial", green_color, 2)
+                        draw_str(image, (10, 30), "Continue descendo", green_color, 2)
                 if (mode == 1) and action == "fim":
                     draw_str(image, (50, 100), "Exercicio concluido", green_color, 3)
             if len(pose) == 0 :
@@ -254,20 +267,20 @@ if __name__ == '__main__':
                     #if prev_action == 'Unknown' or prev_action == "Unknown_First":
                     #    exercise_duration = time.time()
                     #logger.debug("*** Plank ***")
-                    draw_str(image, (20, 50), " Prancha", orange_color, 2)
+                    draw_str(image, (10, 30), " Prancha", orange_color, 2)
                     logger.debug("*** Plank ***")
                     #cv2.putText(image,"PLANK", (20,50), cv2.FONT_HERSHEY_SIMPLEX, 2.5, (0,0,255), 2, 11)
 
-        cv2.putText(image,
-                    "FPS: %f" % (1.0 / (time.time() - fps_time)),
-                    (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                    (0, 255, 0), 2)
-        #image =   cv2.resize(image, (720,720))
+        #cv2.putText(image,
+         #           "FPS: %f" % (1.0 / (time.time() - fps_time)),
+          #          (10, 10),  cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+           #         (0, 255, 0), 2)
+        image =   cv2.resize(image, (1280,720))
         if(frm==0):
             out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 30, (image.shape[1],image.shape[0]))
             print("Initializing")
             frm+=1
-        cv2.imshow('tf-pose-estimation result', image)
+        cv2.imshow('PhysioWatch', image)
         if i != 0:
             out.write(image)
         fps_time = time.time()
